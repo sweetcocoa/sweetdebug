@@ -1,5 +1,11 @@
 # sweetdebug - Feel easy to debug
 ---
+- Install
+```bash
+pip install sweetdebug
+```
+
+
 - Just add one(or two) line
 ```python
 from sweetdebug import set_debug_mode
