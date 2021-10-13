@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="sweetdebug",
-    version="1.0.1",
-    description="Test Package",
+    version="1.0.2",
+    description="Automatic pdb invoker",
     author="sweetcocoa",
     author_email="sweetcocoa@snu.ac.kr",
-    url="https://sweetcocoa.github.io",
+    url="https://github.com/sweetcocoa/sweetdebug",
     license="MIT",
     py_modules=["dm"],
     python_requires=">=3",
