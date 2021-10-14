@@ -8,12 +8,12 @@ pip install sweetdebug
 
 - Just add one(or two) line
 ```python
-from sweetdebug import set_debug_mode
-set_debug_mode()
+from sweetdebug import sweetdebug
+sweetdebug()
 1/0 # Error !!
 ```
 
-- This will invoke pdb automatically
+- This will invoke pdb automatically.
 
 ```bash
 Traceback (Most recent call last):

@@ -2,7 +2,7 @@ import sys
 import backtrace
 
 
-def set_debug_mode():
+def sweetdebug():
     backtrace.hook(align=True)
     old_hook = sys.excepthook
 
