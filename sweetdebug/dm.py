@@ -16,12 +16,15 @@ except ImportError:
 
 
 def send_telegram_message(token, chat_ids, message):
-    bot = telegram.Bot(token)
-    if isinstance(chat_ids, str) or isinstance(chat_ids, int):
-        bot.sendMessage(chat_id=str(chat_ids), text=message)
-    else:
-        for chat_id in chat_ids:
-            bot.sendMessage(chat_id=str(chat_id), text=message)
+    try:
+        bot = telegram.Bot(token)
+        if isinstance(chat_ids, str) or isinstance(chat_ids, int):
+            bot.sendMessage(chat_id=str(chat_ids), text=message)
+        else:
+            for chat_id in chat_ids:
+                bot.sendMessage(chat_id=str(chat_id), text=message)
+    except telegram.error.TelegramError as e:
+        logging.warning(f"sweetdebug : telegram error, {e}, {type(e)}")
 
 
 def sweetdebug(
