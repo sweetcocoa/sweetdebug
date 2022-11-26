@@ -40,28 +40,18 @@ def save_cache(telegram_api_token: str, chat_ids: list):
 
 
 def sweetdebug(
+    telegram: bool = False,
     telegram_api_token: Optional[str] = None,
     chat_ids: Optional[list] = None,
-    use_telegram_if_cache_exists=True,
-    save_telegram_cache=True,
+    use_cache: bool = True,
 ):
-    """
-    :param telegram_api_token:
-        - (str) "11234565445:AEAL7G_VGFDRKwvHD8OXca5e2EnZBAHaTw"
+    """Automatic pdb invoker.
 
-    :param chat_ids:
-        - (str) '34903284'
-        - (int) 34903284
-        - (list) ['34903284', '34903285']
-
-    :param use_telegram_if_cache_exists:
-        <cache>
-        - informations of telegram token above will be automatically saved. This is "cache file".
-
-    :param save_telegram_cache:
-        - if True, telegram token and chat ids will be saved.
-
-    :return:
+    Args:
+        telegram (bool, optional): Whether to use telegram to report the call stack of the error. Defaults to False.
+        telegram_token (Optional[str], optional): Telegram authentication token from Botfather of Telegram. See details (https://core.telegram.org/bots/features#botfather) Defaults to None.
+        chat_ids (Optional[list], optional): Target chat ids. It can be multiple ids. Defaults to None.
+        use_cache (bool, optional): Save authentication token and chat ids to make debug easier. Defaults to True.
     """
     backtrace.hook(align=True)
     old_hook = sys.excepthook
@@ -69,11 +59,17 @@ def sweetdebug(
     if isinstance(chat_ids, str) or isinstance(chat_ids, int):
         chat_ids = [chat_ids]
 
-    if use_telegram_if_cache_exists and os.path.exists(TELEGRAM_CACHE):
-        telegram_api_token, chat_ids = load_cache()
-
-    if telegram_api_token is not None and chat_ids is not None and save_telegram_cache:
-        save_cache(telegram_api_token=telegram_api_token, chat_ids=chat_ids)
+    if telegram:
+        if telegram_api_token is None or chat_ids is None:
+            if use_cache and os.path.exists(TELEGRAM_CACHE):
+                telegram_api_token, chat_ids = load_cache()
+            else:
+                raise ValueError("Both Telegram api and chat-ids should be specified.")
+        else:
+            if use_cache:
+                save_cache(telegram_api_token=telegram_api_token, chat_ids=chat_ids)
+            else:
+                pass
 
     def new_hook(type_, value, tb):
         old_hook(type_, value, tb)
@@ -85,9 +81,7 @@ def sweetdebug(
             else:
                 message = f"{datetime.datetime.now()}\n"
                 message += "\n".join(traceback.format_exception(type_, value, tb))
-                send_telegram_message(
-                    token=telegram_api_token, chat_ids=chat_ids, message=message
-                )
+                send_telegram_message(token=telegram_api_token, chat_ids=chat_ids, message=message)
 
         if type_ != KeyboardInterrupt:
             import pdb
