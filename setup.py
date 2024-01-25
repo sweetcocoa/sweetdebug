@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 from pathlib import Path
 
 this_directory = Path(__file__).parent
@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="sweetdebug",
-    version="1.0.7",
+    version="1.0.8",
     description="Automatic pdb invoker",
     author="sweetcocoa",
     author_email="sweetcocoa@snu.ac.kr",

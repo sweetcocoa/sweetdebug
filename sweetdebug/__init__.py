@@ -1,2 +1,4 @@
 from .dm import sweetdebug
-__all__ = ['sweetdebug']
+from .timer import sweettimer
+
+__all__ = ["sweetdebug", "sweettimer"]

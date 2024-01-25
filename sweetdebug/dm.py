@@ -1,7 +1,8 @@
+import asyncio
 import sys
 import backtrace
 import traceback
-from typing import Optional
+import typing
 import logging
 import datetime
 import os
@@ -17,11 +18,11 @@ except ImportError:
     pass
 
 
-def send_telegram_message(token, chat_ids, message):
+async def send_telegram_message(token, chat_ids, message):
     try:
-        bot = telegram.Bot(token)
-        for chat_id in chat_ids:
-            bot.sendMessage(chat_id=str(chat_id), text=message)
+        async with telegram.Bot(token) as bot:
+            for chat_id in chat_ids:
+                await bot.send_message(chat_id=str(chat_id), text=message)
     except telegram.error.TelegramError as e:
         logging.warning(f"sweetdebug : telegram error, {e}, {type(e)}")
 
@@ -40,11 +41,11 @@ def save_cache(telegram_api_token: str, chat_ids: list):
 
 
 def sweetdebug(
-    telegram: bool = False,
-    telegram_api_token: Optional[str] = None,
-    chat_ids: Optional[list] = None,
-    use_cache: bool = True,
-):
+    telegram: typing.Optional[bool] = False,
+    telegram_api_token: typing.Optional[str] = None,
+    chat_ids: typing.Optional[typing.List[typing.Union[str, int]]] = None,
+    use_cache: typing.Optional[bool] = True,
+) -> None:
     """Automatic pdb invoker.
 
     Args:
@@ -76,12 +77,16 @@ def sweetdebug(
         if telegram_api_token is not None and chat_ids is not None:
             if not TELEGRAM_INSTALLED:
                 logging.warning(
-                    f"sweetdebug : It seems that telegram module is not installed. Try 'pip install python-telegram-bot'"
+                    "It seems that telegram module is not installed. Try 'pip install python-telegram-bot'"
                 )
             else:
                 message = f"{datetime.datetime.now()}\n"
                 message += "\n".join(traceback.format_exception(type_, value, tb))
-                send_telegram_message(token=telegram_api_token, chat_ids=chat_ids, message=message)
+                asyncio.run(
+                    send_telegram_message(
+                        token=telegram_api_token, chat_ids=chat_ids, message=message
+                    )
+                )
 
         if type_ != KeyboardInterrupt:
             import pdb
