@@ -5,6 +5,8 @@ import sys
 
 
 class sweettimer:
+    times = []
+
     def __init__(
         self, name: typing.Optional[str] = None, unit: typing.Optional[str] = None
     ) -> None:
@@ -46,6 +48,7 @@ class sweettimer:
                 "\033[0m"
                 f"[{name}] :: elapsed {elapsed*self.unit_multiplier} {self.unit}"
             )
+            sweettimer.times.append((name, elapsed, self.unit))
             return ret_val
 
         return wrapped_func
@@ -59,9 +62,11 @@ class sweettimer:
         self, exc_type: typing.Any, exc_value: typing.Any, traceback: typing.Any
     ):
         elapsed = time.time() - self.st
+
         print(
             "\033[94m"
             f"({self.frame_desc})"
             "\033[0m"
-            f"{f'[{self.name}]' if self.name is None else ''} :: elapsed {elapsed*self.unit_multiplier} {self.unit}"
+            f"{f'[{self.name}]' if self.name is not None else ''} :: elapsed {elapsed*self.unit_multiplier} {self.unit}"
         )
+        sweettimer.times.append((self.name, elapsed, self.unit))
