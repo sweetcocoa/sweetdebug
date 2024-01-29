@@ -9,6 +9,7 @@ import os
 
 TELEGRAM_INSTALLED = False
 TELEGRAM_CACHE = os.path.join(os.path.dirname(__file__), "cache.txt")
+TELEGRAM_MAX_MESSAGE_LENGTH = 4096
 
 try:
     import telegram
@@ -19,10 +20,23 @@ except ImportError:
 
 
 async def send_telegram_message(token, chat_ids, message):
+    messages = [
+        message[i : i + TELEGRAM_MAX_MESSAGE_LENGTH]
+        for i in range(0, len(message), TELEGRAM_MAX_MESSAGE_LENGTH)
+    ]
+
+    if len(messages) > 2:
+        messages = [
+            messages[0],
+            "\n\n ... \n\n [skipped by sweetdebug] \n\n ... \n\n",
+            (messages[-2] + messages[-1])[-TELEGRAM_MAX_MESSAGE_LENGTH:],
+        ]
+
     try:
         async with telegram.Bot(token) as bot:
             for chat_id in chat_ids:
-                await bot.send_message(chat_id=str(chat_id), text=message)
+                for message in messages:
+                    await bot.send_message(chat_id=str(chat_id), text=message)
     except telegram.error.TelegramError as e:
         logging.warning(f"sweetdebug : telegram error, {e}, {type(e)}")
 
