@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="sweetdebug",
-    version="1.0.10",
+    version="1.0.11",
     description="Automatic pdb invoker",
     author="sweetcocoa",
     author_email="sweetcocoa@snu.ac.kr",
