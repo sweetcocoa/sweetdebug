@@ -41,12 +41,12 @@ class sweettimer:
         def wrapped_func(*args, **kwargs):
             st = time.time()
             ret_val = func(*args, **kwargs)
-            elapsed = time.time() - st
+            elapsed = (time.time() - st) * self.unit_multiplier
             print(
                 "\033[94m"
                 f"({file})"
                 "\033[0m"
-                f"[{name}] :: elapsed {elapsed*self.unit_multiplier} {self.unit}"
+                f"[{name}] :: elapsed {elapsed} {self.unit}"
             )
             sweettimer.times.append((name, elapsed, self.unit))
             return ret_val
@@ -61,12 +61,12 @@ class sweettimer:
     def __exit__(
         self, exc_type: typing.Any, exc_value: typing.Any, traceback: typing.Any
     ):
-        elapsed = time.time() - self.st
+        elapsed = (time.time() - self.st) * self.unit_multipler
 
         print(
             "\033[94m"
             f"({self.frame_desc})"
             "\033[0m"
-            f"{f'[{self.name}]' if self.name is not None else ''} :: elapsed {elapsed*self.unit_multiplier} {self.unit}"
+            f"{f'[{self.name}]' if self.name is not None else ''} :: elapsed {elapsed} {self.unit}"
         )
         sweettimer.times.append((self.name, elapsed, self.unit))
