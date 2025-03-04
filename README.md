@@ -13,7 +13,12 @@ pip install sweetdebug[telegram]
 
 
 ## Main Feature
-- Just add one(or two) line.
+- Use the CLI command to debug any Python script without modifying the source:
+```bash
+sweetdebug your_script.py [script arguments...]
+```
+
+- Or just add one(or two) line in your code:
 ```python
 from sweetdebug import sweetdebug
 sweetdebug()
