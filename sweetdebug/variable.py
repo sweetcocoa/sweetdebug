@@ -5,7 +5,10 @@ def sweetshow(
     locals_: dict, length: int = 40, exclude: typing.List[str] = ["self", "sweetshow"]
 ):
     def RecursivePrint(k, v, depth: int = 0):
-        if isinstance(v, (list, tuple)):
+        if isinstance(v, typing.Mapping):
+            for key, value in v.items():
+                print(f"{key}: {RecursivePrint(k=k, v=value, depth=depth + 1)}")
+        elif isinstance(v, typing.Sequence):
             for v0 in v:
                 RecursivePrint(k=k, v=v0, depth=depth + 1)
         else:
