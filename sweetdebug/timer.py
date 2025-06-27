@@ -61,7 +61,7 @@ class sweettimer:
     def __exit__(
         self, exc_type: typing.Any, exc_value: typing.Any, traceback: typing.Any
     ):
-        elapsed = (time.time() - self.st) * self.unit_multipler
+        elapsed = (time.time() - self.st) * self.unit_multiplier
 
         print(
             "\033[94m"
